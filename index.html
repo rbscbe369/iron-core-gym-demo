@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IronCore Fitness — Train With Purpose</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --iron:#1E1B18;
+    --iron-panel:#26221E;
+    --chalk:#F3EFE7;
+    --chalk-dim:#C9C2B4;
+    --flame:#FF5A2B;
+    --flame-dim:#B23A24;
+    --stone:#8A8378;
+    --line:rgba(243,239,231,0.12);
+    --radius:2px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--iron);
+    color:var(--chalk);
+    font-family:'Inter',sans-serif;
+    line-height:1.55;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{
+    font-family:'Anton',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.01em;
+    line-height:0.95;
+    font-weight:400;
+  }
+  .mono{font-family:'Space Mono',monospace;}
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
+  .eyebrow{
+    font-family:'Space Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--flame);
+    display:flex;align-items:center;gap:10px;
+    margin-bottom:14px;
+  }
+  .eyebrow::before{content:"";width:22px;height:2px;background:var(--flame);}
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:15px 28px;
+    font-family:'Space Mono',monospace;
+    font-size:13px;letter-spacing:0.08em;text-transform:uppercase;font-weight:700;
+    border-radius:var(--radius);
+    border:2px solid transparent;
+    cursor:pointer;
+    transition:transform .15s ease, background .15s ease, border-color .15s ease;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn-flame{background:var(--flame);color:var(--iron);}
+  .btn-flame:hover{background:#ff6f45;}
+  .btn-ghost{border-color:var(--line);color:var(--chalk);}
+  .btn-ghost:hover{border-color:var(--flame);}
+
+  /* stripe divider — evokes lane markings */
+  .stripes{
+    height:10px;
+    background:repeating-linear-gradient(115deg, var(--flame) 0 26px, transparent 26px 40px, var(--iron-panel) 40px 44px, transparent 44px 58px);
+    opacity:0.9;
+  }
+
+  /* ===== NAV ===== */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(30,27,24,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;max-width:1180px;margin:0 auto;}
+  .logo{font-family:'Anton',sans-serif;font-size:22px;letter-spacing:0.02em;}
+  .logo span{color:var(--flame);}
+  .nav-links{display:flex;gap:34px;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;}
+  .nav-links a{opacity:0.85;transition:opacity .15s;}
+  .nav-links a:hover{opacity:1;color:var(--flame);}
+  .nav-cta{display:none;}
+  @media(min-width:760px){.nav-cta{display:inline-flex;}}
+  @media(max-width:760px){.nav-links{display:none;}}
+
+  /* ===== HERO ===== */
+  .hero{
+    padding:90px 0 70px;
+    background:
+      radial-gradient(ellipse 900px 500px at 82% -10%, rgba(255,90,43,0.16), transparent 60%),
+      var(--iron);
+    position:relative;
+  }
+  .hero-grid{display:grid;grid-template-columns:1fr;gap:50px;align-items:end;}
+  @media(min-width:900px){.hero-grid{grid-template-columns:1.3fr 1fr;}}
+  .hero h1{font-size:clamp(48px,8vw,92px);}
+  .hero h1 .flame-word{color:var(--flame);}
+  .hero p.lead{margin-top:22px;max-width:480px;color:var(--chalk-dim);font-size:17px;}
+  .hero-actions{display:flex;gap:16px;flex-wrap:wrap;margin-top:34px;}
+
+  .scoreboard{
+    background:var(--iron-panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:24px;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
+  }
+  .score-item{text-align:center;}
+  .score-num{font-family:'Space Mono',monospace;font-size:30px;font-weight:700;color:var(--flame);}
+  .score-label{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--chalk-dim);margin-top:6px;}
+
+  section{padding:88px 0;}
+  .section-head{max-width:600px;margin-bottom:52px;}
+  .section-head h2{font-size:clamp(32px,4.5vw,48px);}
+  .section-head p{color:var(--chalk-dim);margin-top:14px;font-size:16px;}
+
+  /* ===== GROUP CLASS BANNER ===== */
+  #classes{padding:0;position:relative;}
+  .banner-img{
+    width:100%;
+    height:clamp(320px,52vw,560px);
+    object-fit:cover;
+    display:block;
+    filter:saturate(0.92) contrast(1.05);
+  }
+  .banner-overlay{
+    position:absolute;inset:0;
+    background:linear-gradient(0deg, rgba(30,27,24,0.92) 0%, rgba(30,27,24,0.15) 45%, rgba(30,27,24,0.05) 100%);
+    display:flex;align-items:flex-end;
+  }
+  .banner-text{padding:44px 28px;max-width:1180px;margin:0 auto;width:100%;}
+  .banner-text h2{font-size:clamp(28px,4.5vw,42px);}
+  .banner-text p{color:var(--chalk-dim);margin-top:10px;max-width:440px;font-size:15px;}
+
+  /* ===== PLANS ===== */
+  #plans{background:var(--iron-panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .plans-grid{display:grid;grid-template-columns:1fr;gap:24px;}
+  @media(min-width:820px){.plans-grid{grid-template-columns:repeat(3,1fr);}}
+  .plan{
+    background:var(--iron);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:34px 28px;
+    display:flex;flex-direction:column;
+    transition:border-color .2s;
+  }
+  .plan.featured{border-color:var(--flame);position:relative;}
+  .plan.featured::before{
+    content:"Most Popular";
+    position:absolute;top:-13px;left:28px;
+    background:var(--flame);color:var(--iron);
+    font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;
+    padding:5px 12px;border-radius:2px;
+  }
+  .plan-name{font-family:'Space Mono',monospace;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:var(--stone);}
+  .plan-price{font-family:'Anton',sans-serif;font-size:44px;margin-top:10px;}
+  .plan-price span{font-family:'Space Mono',monospace;font-size:14px;color:var(--chalk-dim);text-transform:none;}
+  .plan-features{list-style:none;margin:26px 0 30px;flex-grow:1;}
+  .plan-features li{
+    padding:10px 0;border-top:1px solid var(--line);
+    font-size:14px;color:var(--chalk-dim);
+    display:flex;align-items:center;gap:10px;
+  }
+  .plan-features li::before{content:"✓";color:var(--flame);font-weight:700;}
+
+  /* ===== TRAINERS ===== */
+  .trainers-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
+  @media(min-width:820px){.trainers-grid{grid-template-columns:repeat(4,1fr);}}
+  .trainer{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--iron-panel);}
+  .trainer-photo{
+    aspect-ratio:3/4;
+    display:flex;align-items:center;justify-content:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .trainer-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg, rgba(30,27,24,0.75), transparent 55%);}
+  .monogram{
+    font-family:'Anton',sans-serif;
+    font-size:56px;
+    color:rgba(243,239,231,0.92);
+    letter-spacing:0.02em;
+    z-index:1;
+    text-shadow:0 2px 12px rgba(0,0,0,0.25);
+  }
+  .trainer-photo::before{
+    content:"";position:absolute;inset:0;
+    background-image:
+      repeating-linear-gradient(115deg, rgba(243,239,231,0.05) 0 2px, transparent 2px 26px);
+  }
+  .trainer-photo img{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%;
+    z-index:0;
+  }
+  .avatar-1{background:linear-gradient(155deg,#FF5A2B,#7a2517);}
+  .avatar-2{background:linear-gradient(155deg,#4a5a4f,#1e2620);}
+  .avatar-3{background:linear-gradient(155deg,#8A6D3B,#3a2c14);}
+  .avatar-4{background:linear-gradient(155deg,#5a4a6d,#241c2e);}
+  .trainer-info{padding:16px 16px 20px;}
+  .trainer-name{font-family:'Anton',sans-serif;font-size:18px;text-transform:uppercase;}
+  .trainer-tag{font-family:'Space Mono',monospace;font-size:11px;color:var(--flame);letter-spacing:0.08em;text-transform:uppercase;margin-top:4px;}
+  .trainer-bio{font-size:13px;color:var(--chalk-dim);margin-top:10px;}
+
+  /* ===== EXERCISE LIBRARY ===== */
+  #exercises{background:var(--iron-panel);border-top:1px solid var(--line);}
+  .lib-controls{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:34px;}
+  .lib-controls input, .lib-controls select{
+    background:var(--iron);
+    border:1px solid var(--line);
+    color:var(--chalk);
+    padding:12px 16px;
+    font-family:'Inter',sans-serif;font-size:14px;
+    border-radius:var(--radius);
+    min-width:160px;
+  }
+  .lib-controls input:focus, .lib-controls select:focus{outline:1px solid var(--flame);}
+  .lib-status{font-family:'Space Mono',monospace;font-size:12px;color:var(--stone);margin-bottom:18px;}
+  .ex-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;}
+  @media(min-width:640px){.ex-grid{grid-template-columns:repeat(3,1fr);}}
+  @media(min-width:980px){.ex-grid{grid-template-columns:repeat(4,1fr);}}
+  .ex-card{
+    background:var(--iron);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;cursor:pointer;transition:border-color .15s, transform .15s;
+  }
+  .ex-card:hover{border-color:var(--flame);transform:translateY(-3px);}
+  .ex-img{aspect-ratio:1/1;background:#171512;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .ex-img img{width:100%;height:100%;object-fit:cover;}
+  .ex-img .ph{font-family:'Space Mono',monospace;font-size:10px;color:var(--stone);text-align:center;padding:10px;}
+  .ex-body{padding:12px 14px 16px;}
+  .ex-name{font-size:13px;font-weight:700;text-transform:capitalize;line-height:1.3;}
+  .ex-target{font-family:'Space Mono',monospace;font-size:10px;color:var(--flame);text-transform:uppercase;letter-spacing:0.06em;margin-top:6px;}
+
+  /* modal */
+  .modal-bg{
+    display:none;position:fixed;inset:0;background:rgba(20,17,15,0.88);
+    z-index:100;align-items:center;justify-content:center;padding:20px;
+    backdrop-filter:blur(6px);
+  }
+  .modal-bg.open{display:flex;}
+  .modal{
+    background:var(--iron-panel);border:1px solid var(--line);border-radius:var(--radius);
+    max-width:540px;width:100%;max-height:90vh;overflow-y:auto;padding:32px 28px;
+    position:relative;box-shadow:0 20px 50px rgba(0,0,0,0.5);
+  }
+  .modal-close{
+    position:absolute;top:20px;right:20px;
+    font-family:'Space Mono',monospace;cursor:pointer;color:var(--stone);font-size:12px;
+    background:transparent;border:none;letter-spacing:0.08em;
+    padding:6px;transition:color .15s;
+  }
+  .modal-close:hover{color:var(--flame);}
+  .modal h3{font-size:28px;text-transform:uppercase;margin-top:0;line-height:1.1;}
+  .modal .modal-sub{color:var(--chalk-dim);font-size:14px;margin:8px 0 20px;}
+  .modal .ex-target{margin:10px 0 18px;}
+  .modal ol{padding-left:20px;color:var(--chalk-dim);font-size:14px;}
+  .modal ol li{margin-bottom:8px;}
+  .modal img{border-radius:var(--radius);margin-bottom:16px;}
+
+  /* Trial Form Styles */
+  .form-group{margin-bottom:16px;}
+  .form-row{display:grid;grid-template-columns:1fr;gap:14px;}
+  @media(min-width:500px){.form-row{grid-template-columns:1fr 1fr;}}
+  .form-label{
+    display:block;
+    font-family:'Space Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--chalk-dim);
+    margin-bottom:6px;
+  }
+  .form-label .req{color:var(--flame);margin-left:2px;}
+  .form-input, .form-select{
+    width:100%;
+    background:var(--iron);
+    border:1px solid var(--line);
+    color:var(--chalk);
+    padding:12px 14px;
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    border-radius:var(--radius);
+    transition:border-color .15s;
+  }
+  .form-input:focus, .form-select:focus{
+    outline:1px solid var(--flame);
+    border-color:var(--flame);
+  }
+  .goal-chips{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:8px;
+  }
+  .chip-item{position:relative;}
+  .chip-input{
+    position:absolute;opacity:0;pointer-events:none;
+  }
+  .chip-label{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:10px 6px;
+    background:var(--iron);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    font-family:'Space Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:var(--chalk-dim);
+    cursor:pointer;
+    transition:all .15s;
+    user-select:none;
+  }
+  .chip-input:checked + .chip-label{
+    border-color:var(--flame);
+    background:rgba(255,90,43,0.12);
+    color:var(--chalk);
+    font-weight:700;
+  }
+  .btn-block{width:100%;justify-content:center;margin-top:10px;}
+  .form-error{
+    color:#ff6b6b;
+    font-family:'Space Mono',monospace;
+    font-size:11px;
+    margin-bottom:12px;
+    display:none;
+    background:rgba(255,90,43,0.08);
+    padding:8px 12px;
+    border-left:2px solid #ff6b6b;
+  }
+  .form-error.active{display:block;}
+  .form-note{
+    font-size:11px;
+    color:var(--stone);
+    text-align:center;
+    margin-top:14px;
+    line-height:1.4;
+  }
+  
+  /* Success View */
+  .success-box{
+    text-align:center;
+    padding:10px 0 6px;
+  }
+  .success-icon{
+    width:56px;height:56px;
+    background:rgba(255,90,43,0.15);
+    border:2px solid var(--flame);
+    color:var(--flame);
+    border-radius:50%;
+    display:inline-flex;
+    align-items:center;justify-content:center;
+    font-size:24px;
+    font-weight:700;
+    margin:0 auto 16px;
+  }
+  .booking-summary{
+    background:var(--iron);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px 18px;
+    margin:20px 0;
+    text-align:left;
+  }
+  .summary-item{
+    display:flex;
+    justify-content:space-between;
+    padding:7px 0;
+    border-bottom:1px solid rgba(243,239,231,0.06);
+    font-size:13px;
+  }
+  .summary-item:last-child{border-bottom:none;}
+  .summary-item .label{color:var(--stone);font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;}
+  .summary-item .val{color:var(--chalk);font-weight:600;text-align:right;}
+
+  /* ===== CTA ===== */
+  #trial{
+    background:linear-gradient(155deg, var(--flame-dim), #7a2517);
+    text-align:center;
+  }
+  #trial h2{font-size:clamp(34px,6vw,56px);color:var(--chalk);}
+  #trial p{color:rgba(243,239,231,0.85);margin:16px auto 34px;max-width:480px;}
+  .trial-cta-group{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+  .btn-white{background:var(--chalk);color:var(--iron);}
+  .btn-white:hover{background:#fff;}
+  .btn-outline-chalk{border:2px solid rgba(243,239,231,0.4);color:var(--chalk);}
+  .btn-outline-chalk:hover{border-color:var(--chalk);background:rgba(243,239,231,0.08);}
+
+  footer{
+    padding:40px 0;border-top:1px solid var(--line);
+    display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;
+  }
+  footer .logo{font-size:16px;}
+  footer .foot-links{display:flex;gap:22px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--stone);}
+  .credit{font-family:'Space Mono',monospace;font-size:11px;color:var(--stone);}
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo">IRON<span>CORE</span></div>
+    <div class="nav-links">
+      <a href="#plans">Plans</a>
+      <a href="#trainers">Trainers</a>
+      <a href="#exercises">Exercises</a>
+      <a href="#trial">Trial</a>
+    </div>
+    <button class="btn btn-flame nav-cta js-open-trial">Book Trial</button>
+  </nav>
+</header>
+
+<div class="stripes"></div>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Coimbatore's Training Ground</div>
+      <h1>Train Hard.<br>Track Every<br><span class="flame-word">Rep.</span></h1>
+      <p class="lead">Strength coaching, real trainer accountability, and a workout library built to remove every excuse. No contracts pushed on day one — just a free trial to see if we're the right fit.</p>
+      <div class="hero-actions">
+        <button class="btn btn-flame js-open-trial">Book a Free Trial →</button>
+        <a class="btn btn-ghost" href="#plans">See Membership Plans</a>
+      </div>
+    </div>
+    <div class="scoreboard">
+      <div class="score-item"><div class="score-num">1,200+</div><div class="score-label">Members Trained</div></div>
+      <div class="score-item"><div class="score-num">14</div><div class="score-label">Certified Coaches</div></div>
+      <div class="score-item"><div class="score-num">6AM–10PM</div><div class="score-label">Open Daily</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="classes">
+  <img class="banner-img" src="images/hero-group-class.jpg" alt="Group class doing lunges at IronCore Fitness">
+  <div class="banner-overlay">
+    <div class="banner-text">
+      <div class="eyebrow">Group Classes</div>
+      <h2>Train together.<br>Push harder.</h2>
+      <p>Daily group sessions led by our coaches — strength circuits, mobility, and conditioning, all included in every membership.</p>
+    </div>
+  </div>
+</section>
+
+<div class="stripes"></div>
+
+<section id="plans">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Membership</div>
+      <h2>Pick your plan</h2>
+      <p>Straightforward pricing. Freeze, upgrade, or cancel anytime — book a trial or claim your pass below.</p>
+    </div>
+    <div class="plans-grid">
+      <div class="plan">
+        <div class="plan-name">Basic</div>
+        <div class="plan-price">₹1,499 <span>/ month</span></div>
+        <ul class="plan-features">
+          <li>Full gym floor access</li>
+          <li>Locker & shower access</li>
+          <li>Workout library access</li>
+          <li>1 free trainer check-in / month</li>
+        </ul>
+        <button class="btn btn-ghost js-open-trial" data-plan="Basic (₹1,499/mo)">Choose Basic</button>
+      </div>
+      <div class="plan featured">
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">₹2,499 <span>/ month</span></div>
+        <ul class="plan-features">
+          <li>Everything in Basic</li>
+          <li>Weekly trainer check-ins</li>
+          <li>Custom workout plan</li>
+          <li>Group class access</li>
+          <li>Nutrition guidance</li>
+        </ul>
+        <button class="btn btn-flame js-open-trial" data-plan="Pro (₹2,499/mo)">Choose Pro</button>
+      </div>
+      <div class="plan">
+        <div class="plan-name">Elite</div>
+        <div class="plan-price">₹4,999 <span>/ month</span></div>
+        <ul class="plan-features">
+          <li>Everything in Pro</li>
+          <li>1-on-1 personal training ×3/week</li>
+          <li>Progress tracking & body scans</li>
+          <li>Priority class booking</li>
+        </ul>
+        <button class="btn btn-ghost js-open-trial" data-plan="Elite (₹4,999/mo)">Choose Elite</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="trainers">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Coaches</div>
+      <h2>Trained by people, not apps</h2>
+      <p>Every plan includes access to certified coaches who actually watch your form.</p>
+    </div>
+    <div class="trainers-grid">
+      <div class="trainer">
+        <div class="trainer-photo avatar-1"><img src="images/trainer-arjun.jpg" alt="Arjun R., strength and powerlifting coach"></div>
+        <div class="trainer-info">
+          <div class="trainer-name">Arjun R.</div>
+          <div class="trainer-tag">Strength & Powerlifting</div>
+          <div class="trainer-bio">8 yrs coaching. Specializes in compound lifts and injury-safe progression.</div>
+        </div>
+      </div>
+      <div class="trainer">
+        <div class="trainer-photo avatar-2"><img src="images/trainer-meera.jpg" alt="Meera K., functional fitness coach"></div>
+        <div class="trainer-info">
+          <div class="trainer-name">Meera K.</div>
+          <div class="trainer-tag">Functional Fitness</div>
+          <div class="trainer-bio">Former athlete. Focuses on mobility, conditioning, and sustainable habits.</div>
+        </div>
+      </div>
+      <div class="trainer">
+        <div class="trainer-photo avatar-3"><img src="images/trainer-vikram.jpg" alt="Vikram S., bodybuilding coach"></div>
+        <div class="trainer-info">
+          <div class="trainer-name">Vikram S.</div>
+          <div class="trainer-tag">Bodybuilding</div>
+          <div class="trainer-bio">Competition prep coach. Structured hypertrophy programming.</div>
+        </div>
+      </div>
+      <div class="trainer">
+        <div class="trainer-photo avatar-4"><img src="images/trainer-divya.jpg" alt="Divya N., nutrition and weight loss coach"></div>
+        <div class="trainer-info">
+          <div class="trainer-name">Divya N.</div>
+          <div class="trainer-tag">Nutrition & Weight Loss</div>
+          <div class="trainer-bio">Certified nutrition coach pairing training with realistic meal plans.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="exercises">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Workout Library</div>
+      <h2>Search the exercise library</h2>
+      <p>Every member gets access to a searchable library of exercises with proper-form photos — filter by body part or equipment below.</p>
+    </div>
+    <div class="lib-controls">
+      <input type="text" id="searchInput" placeholder="Search exercise name...">
+      <select id="bodyPartFilter"><option value="">All Body Parts</option></select>
+      <select id="equipmentFilter"><option value="">All Equipment</option></select>
+    </div>
+    <div class="lib-status" id="libStatus">Loading exercise library…</div>
+    <div class="ex-grid" id="exGrid"></div>
+  </div>
+</section>
+
+<section id="trial">
+  <div class="wrap">
+    <h2>First Session's<br>On Us.</h2>
+    <p>Come train, meet a coach, see the floor. No pressure, no long-term commitment on day one.</p>
+    <div class="trial-cta-group">
+      <button class="btn btn-white js-open-trial">Book Free Day Pass →</button>
+      <a class="btn btn-outline-chalk" href="https://wa.me/910000000000?text=Hi!%20I%27d%20like%20to%20book%20a%20free%20trial%20at%20IronCore." target="_blank">Chat on WhatsApp ↗</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;width:100%;">
+    <div class="logo">IRON<span>CORE</span></div>
+    <div class="foot-links">
+      <a href="#plans">Plans</a>
+      <a href="#trainers">Trainers</a>
+      <a href="#exercises">Exercises</a>
+      <a href="#trial">Trial</a>
+    </div>
+    <div class="credit">Sample site built by Digireach Technologies · digireachtech.in</div>
+  </div>
+</footer>
+
+<!-- Exercise Details Modal -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <button class="modal-close" id="modalClose" aria-label="Close modal">CLOSE ✕</button>
+    <img id="modalImg" src="" alt="">
+    <h3 id="modalName"></h3>
+    <div class="ex-target" id="modalTarget"></div>
+    <ol id="modalInstructions"></ol>
+  </div>
+</div>
+
+<!-- Working Trial Booking Modal -->
+<div class="modal-bg" id="trialModalBg">
+  <div class="modal">
+    <button class="modal-close" id="trialModalClose" aria-label="Close modal">CLOSE ✕</button>
+    
+    <!-- Form View -->
+    <div id="trialFormContainer">
+      <div class="eyebrow" style="margin-bottom:8px;">Zero Cost · Zero Commitment</div>
+      <h3>Book Free Day Pass</h3>
+      <p class="modal-sub">Step on the floor, test our equipment, and train with our certified coaches. No contracts pushed on day one.</p>
+      
+      <form id="trialForm" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="trialName">Full Name <span class="req">*</span></label>
+          <input type="text" id="trialName" class="form-input" placeholder="e.g. Rahul Sharma" required>
+        </div>
+
+        <div class="form-row form-group">
+          <div>
+            <label class="form-label" for="trialPhone">WhatsApp / Phone <span class="req">*</span></label>
+            <input type="tel" id="trialPhone" class="form-input" placeholder="e.g. 9876543210" required>
+          </div>
+          <div>
+            <label class="form-label" for="trialSlot">Preferred Slot <span class="req">*</span></label>
+            <select id="trialSlot" class="form-select" required>
+              <option value="">Select time slot</option>
+              <option value="Morning (6:00 AM – 9:30 AM)">Morning (6:00 AM – 9:30 AM)</option>
+              <option value="Midday (10:00 AM – 4:00 PM)">Midday (10:00 AM – 4:00 PM)</option>
+              <option value="Evening (5:00 PM – 9:30 PM)">Evening (5:00 PM – 9:30 PM)</option>
+              <option value="Weekend Special (7:00 AM – 12:00 PM)">Weekend Special (7:00 AM – 12:00 PM)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Primary Training Goal <span class="req">*</span></label>
+          <div class="goal-chips">
+            <div class="chip-item">
+              <input type="radio" name="trialGoal" id="goal-strength" class="chip-input" value="Strength & Power" checked>
+              <label for="goal-strength" class="chip-label">Strength & Power</label>
+            </div>
+            <div class="chip-item">
+              <input type="radio" name="trialGoal" id="goal-fatloss" class="chip-input" value="Fat Loss & Tone">
+              <label for="goal-fatloss" class="chip-label">Fat Loss & Tone</label>
+            </div>
+            <div class="chip-item">
+              <input type="radio" name="trialGoal" id="goal-hypertrophy" class="chip-input" value="Muscle Building">
+              <label for="goal-hypertrophy" class="chip-label">Muscle Building</label>
+            </div>
+            <div class="chip-item">
+              <input type="radio" name="trialGoal" id="goal-general" class="chip-input" value="General Fitness">
+              <label for="goal-general" class="chip-label">General Fitness</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row form-group">
+          <div>
+            <label class="form-label" for="trialPlan">Plan Interest</label>
+            <select id="trialPlan" class="form-select">
+              <option value="Not Sure Yet (Guide Me)">Not Sure Yet (Guide Me)</option>
+              <option value="Basic (₹1,499/mo)">Basic (₹1,499/mo)</option>
+              <option value="Pro (₹2,499/mo)">Pro (₹2,499/mo)</option>
+              <option value="Elite (₹4,999/mo)">Elite (₹4,999/mo)</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label" for="trialCoach">Preferred Coach</label>
+            <select id="trialCoach" class="form-select">
+              <option value="Any Available Coach">Any Available Coach</option>
+              <option value="Arjun R. (Strength & Powerlifting)">Arjun R. (Strength & Power)</option>
+              <option value="Meera K. (Functional Fitness)">Meera K. (Functional)</option>
+              <option value="Vikram S. (Bodybuilding)">Vikram S. (Bodybuilding)</option>
+              <option value="Divya N. (Nutrition & Weight Loss)">Divya N. (Nutrition)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-error" id="trialFormError"></div>
+        <button type="submit" class="btn btn-flame btn-block" id="trialSubmitBtn">Confirm Free Trial Booking →</button>
+        <div class="form-note mono">⚡ Instant confirmation. No spam, credit card, or commitment required.</div>
+      </form>
+    </div>
+
+    <!-- Success View -->
+    <div id="trialSuccessContainer" style="display:none;" class="success-box">
+      <div class="success-icon">✓</div>
+      <div class="eyebrow" style="justify-content:center;margin-bottom:8px;">Booking Confirmed</div>
+      <h3>You're On The List!</h3>
+      <p class="modal-sub" style="margin-bottom:14px;">We've reserved your complimentary trial session. Check your booking details below:</p>
+      
+      <div class="booking-summary">
+        <div class="summary-item">
+          <span class="label">Member</span>
+          <span class="val" id="confName">—</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Contact</span>
+          <span class="val" id="confPhone">—</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Time Slot</span>
+          <span class="val" id="confSlot">—</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Goal</span>
+          <span class="val" id="confGoal">—</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Plan Interest</span>
+          <span class="val" id="confPlan">—</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Coach</span>
+          <span class="val" id="confCoach">—</span>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <a id="confWhatsAppLink" href="#" target="_blank" class="btn btn-flame btn-block">Open WhatsApp Pass ↗</a>
+        <button type="button" id="confDoneBtn" class="btn btn-ghost btn-block">Back to Website</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===== EXERCISE LIBRARY =====
+  const exGrid = document.getElementById('exGrid');
+  const libStatus = document.getElementById('libStatus');
+  const searchInput = document.getElementById('searchInput');
+  const bodyPartFilter = document.getElementById('bodyPartFilter');
+  const equipmentFilter = document.getElementById('equipmentFilter');
+  const modalBg = document.getElementById('modalBg');
+  const modalClose = document.getElementById('modalClose');
+
+  let allExercises = [];
+  const IMG_BASE = 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/';
+
+  async function loadExercises(){
+    try{
+      const res = await fetch('https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/dist/exercises.json');
+      if(!res.ok) throw new Error('fetch failed');
+      const data = await res.json();
+      allExercises = data.slice(0, 120); // keep the demo light
+      populateFilters(allExercises);
+      renderExercises(allExercises);
+      libStatus.textContent = `${allExercises.length} exercises loaded — try "chest with dumbbell"`;
+    }catch(err){
+      libStatus.textContent = 'Could not load live library (offline demo). Showing sample set.';
+      const sample = [
+        {name:"Push-Up", category:"strength", primaryMuscles:["chest"], equipment:"body only", images:[], instructions:["Start in a plank position.","Lower your chest to the floor.","Push back up to start."]},
+        {name:"Bodyweight Squat", category:"strength", primaryMuscles:["quadriceps"], equipment:"body only", images:[], instructions:["Stand with feet shoulder-width apart.","Bend knees and lower hips back.","Return to standing."]},
+        {name:"Plank", category:"strength", primaryMuscles:["abdominals"], equipment:"body only", images:[], instructions:["Hold forearm plank position.","Keep hips level.","Hold for time."]}
+      ];
+      allExercises = sample;
+      populateFilters(sample);
+      renderExercises(sample);
+    }
+  }
+
+  function populateFilters(list){
+    const bodyParts = [...new Set(list.flatMap(e => e.primaryMuscles || []))].sort();
+    const equipment = [...new Set(list.map(e => e.equipment).filter(Boolean))].sort();
+    bodyParts.forEach(bp => {
+      const opt = document.createElement('option');
+      opt.value = bp; opt.textContent = bp;
+      bodyPartFilter.appendChild(opt);
+    });
+    equipment.forEach(eq => {
+      const opt = document.createElement('option');
+      opt.value = eq; opt.textContent = eq;
+      equipmentFilter.appendChild(opt);
+    });
+  }
+
+  function renderExercises(list){
+    exGrid.innerHTML = '';
+    if(list.length === 0){
+      exGrid.innerHTML = '<div class="lib-status">No exercises match your filters.</div>';
+      return;
+    }
+    list.forEach(ex => {
+      const card = document.createElement('div');
+      card.className = 'ex-card';
+      const imgPath = ex.images && ex.images[0] ? IMG_BASE + ex.images[0] : null;
+      card.innerHTML = `
+        <div class="ex-img">${imgPath ? `<img loading="lazy" src="${imgPath}" alt="${ex.name}">` : `<div class="ph">${ex.name}</div>`}</div>
+        <div class="ex-body">
+          <div class="ex-name">${ex.name}</div>
+          <div class="ex-target">${(ex.primaryMuscles || []).join(', ')}</div>
+        </div>`;
+      card.addEventListener('click', () => openModal(ex, imgPath));
+      exGrid.appendChild(card);
+    });
+  }
+
+  function openModal(ex, imgPath){
+    document.getElementById('modalImg').src = imgPath || '';
+    document.getElementById('modalImg').style.display = imgPath ? 'block' : 'none';
+    document.getElementById('modalName').textContent = ex.name;
+    document.getElementById('modalTarget').textContent = `Target: ${(ex.primaryMuscles||[]).join(', ')} · Equipment: ${ex.equipment || 'n/a'}`;
+    const list = document.getElementById('modalInstructions');
+    list.innerHTML = '';
+    (ex.instructions || []).forEach(step => {
+      const li = document.createElement('li');
+      li.textContent = step;
+      list.appendChild(li);
+    });
+    modalBg.classList.add('open');
+  }
+  modalClose.addEventListener('click', () => modalBg.classList.remove('open'));
+  modalBg.addEventListener('click', (e) => { if(e.target === modalBg) modalBg.classList.remove('open'); });
+
+  function applyFilters(){
+    const q = searchInput.value.toLowerCase();
+    const bp = bodyPartFilter.value;
+    const eq = equipmentFilter.value;
+    const filtered = allExercises.filter(ex => {
+      const matchesQ = ex.name.toLowerCase().includes(q);
+      const matchesBp = !bp || (ex.primaryMuscles || []).includes(bp);
+      const matchesEq = !eq || ex.equipment === eq;
+      return matchesQ && matchesBp && matchesEq;
+    });
+    renderExercises(filtered);
+  }
+  searchInput.addEventListener('input', applyFilters);
+  bodyPartFilter.addEventListener('change', applyFilters);
+  equipmentFilter.addEventListener('change', applyFilters);
+
+  loadExercises();
+
+  // ===== WORKING TRIAL REQUEST FORM =====
+  const trialModalBg = document.getElementById('trialModalBg');
+  const trialModalClose = document.getElementById('trialModalClose');
+  const trialForm = document.getElementById('trialForm');
+  const trialFormContainer = document.getElementById('trialFormContainer');
+  const trialSuccessContainer = document.getElementById('trialSuccessContainer');
+  const trialFormError = document.getElementById('trialFormError');
+  const confDoneBtn = document.getElementById('confDoneBtn');
+
+  function openTrialModal(preferredPlan){
+    // Reset view state
+    trialFormContainer.style.display = 'block';
+    trialSuccessContainer.style.display = 'none';
+    trialFormError.classList.remove('active');
+    trialFormError.textContent = '';
+
+    if(preferredPlan){
+      const planSelect = document.getElementById('trialPlan');
+      for(let i = 0; i < planSelect.options.length; i++){
+        if(planSelect.options[i].value.includes(preferredPlan) || preferredPlan.includes(planSelect.options[i].value)){
+          planSelect.selectedIndex = i;
+          break;
+        }
+      }
+    }
+
+    trialModalBg.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+      const nameInput = document.getElementById('trialName');
+      if(nameInput) nameInput.focus();
+    }, 100);
+  }
+
+  function closeTrialModal(){
+    trialModalBg.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.js-open-trial').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const plan = btn.getAttribute('data-plan') || '';
+      openTrialModal(plan);
+    });
+  });
+
+  trialModalClose.addEventListener('click', closeTrialModal);
+  if(confDoneBtn) confDoneBtn.addEventListener('click', closeTrialModal);
+  trialModalBg.addEventListener('click', (e) => {
+    if(e.target === trialModalBg) closeTrialModal();
+  });
+
+  // Handle Form Submission
+  trialForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    trialFormError.classList.remove('active');
+    trialFormError.textContent = '';
+
+    const name = document.getElementById('trialName').value.trim();
+    const phone = document.getElementById('trialPhone').value.trim();
+    const slot = document.getElementById('trialSlot').value;
+    const plan = document.getElementById('trialPlan').value;
+    const coach = document.getElementById('trialCoach').value;
+    const goalInput = document.querySelector('input[name="trialGoal"]:checked');
+    const goal = goalInput ? goalInput.value : 'General Fitness';
+
+    // Validation
+    if(!name){
+      trialFormError.textContent = 'Please enter your full name.';
+      trialFormError.classList.add('active');
+      return;
+    }
+    const cleanPhone = phone.replace(/\D/g, '');
+    if(!cleanPhone || cleanPhone.length < 10){
+      trialFormError.textContent = 'Please enter a valid 10-digit phone/WhatsApp number.';
+      trialFormError.classList.add('active');
+      return;
+    }
+    if(!slot){
+      trialFormError.textContent = 'Please select a preferred time slot.';
+      trialFormError.classList.add('active');
+      return;
+    }
+
+    const leadData = {
+      id: 'LEAD_' + Date.now(),
+      name,
+      phone: cleanPhone,
+      slot,
+      goal,
+      plan,
+      coach,
+      submittedAt: new Date().toISOString()
+    };
+
+    // Save lead to localStorage
+    try{
+      const existingLeads = JSON.parse(localStorage.getItem('ironcore_trial_leads') || '[]');
+      existingLeads.unshift(leadData);
+      localStorage.setItem('ironcore_trial_leads', JSON.stringify(existingLeads));
+    }catch(err){
+      console.warn('LocalStorage save error:', err);
+    }
+
+    // Populate Success UI
+    document.getElementById('confName').textContent = name;
+    document.getElementById('confPhone').textContent = phone;
+    document.getElementById('confSlot').textContent = slot;
+    document.getElementById('confGoal').textContent = goal;
+    document.getElementById('confPlan').textContent = plan;
+    document.getElementById('confCoach').textContent = coach;
+
+    // Create customized WhatsApp Confirmation URL
+    const waText = encodeURIComponent(
+      `Hi IronCore! I just requested a free trial pass.\n\n` +
+      `👤 Name: ${name}\n` +
+      `📞 Phone: ${phone}\n` +
+      `⏰ Preferred Slot: ${slot}\n` +
+      `🎯 Goal: ${goal}\n` +
+      `📋 Plan Interest: ${plan}\n` +
+      `🏋️ Coach: ${coach}\n\n` +
+      `Looking forward to visiting the floor!`
+    );
+    const waUrl = `https://wa.me/910000000000?text=${waText}`;
+    document.getElementById('confWhatsAppLink').href = waUrl;
+
+    // Switch view
+    trialFormContainer.style.display = 'none';
+    trialSuccessContainer.style.display = 'block';
+    trialForm.reset();
+  });
+</script>
+
+</body>
+</html>
