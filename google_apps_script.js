@@ -32,19 +32,18 @@ function doPost(e) {
     // Auto-create clean styled header row if empty
     if (sheet.getLastRow() === 0) {
       sheet.appendRow([
-        "Recorded At",
-        "Lead ID",
-        "Full Name",
-        "Phone / WhatsApp",
-        "Preferred Slot",
-        "Training Goal",
-        "Plan Interest",
-        "Preferred Coach",
-        "Submission Timestamp"
+        "Timestamp",
+        "Name",
+        "Phone",
+        "Slot",
+        "Goal",
+        "Plan",
+        "Coach",
+        "LeadID"
       ]);
       
       // Style headers: Charcoal background with Flame Orange text
-      var headerRange = sheet.getRange(1, 1, 1, 9);
+      var headerRange = sheet.getRange(1, 1, 1, 8);
       headerRange.setBackground("#1E1B18");
       headerRange.setFontColor("#FF5A2B");
       headerRange.setFontWeight("bold");
@@ -63,27 +62,25 @@ function doPost(e) {
       data = e.parameter;
     }
 
-    var leadId = data.id || ("LEAD_" + new Date().getTime());
+    var timestamp = Utilities.formatDate(new Date(), Session.getScriptTimeZone() || "GMT", "yyyy-MM-dd HH:mm:ss");
     var name = data.name || "N/A";
     var phone = data.phone || "N/A";
     var slot = data.slot || "N/A";
     var goal = data.goal || "General Fitness";
     var plan = data.plan || "Not Specified";
     var coach = data.coach || "Any Available";
-    var submittedAt = data.submittedAt || new Date().toISOString();
-    var recordedAt = Utilities.formatDate(new Date(), Session.getScriptTimeZone() || "GMT", "yyyy-MM-dd HH:mm:ss");
+    var leadId = data.id || ("LEAD_" + new Date().getTime());
 
-    // Append new lead row
+    // Append new lead row matching: Timestamp | Name | Phone | Slot | Goal | Plan | Coach | LeadID
     sheet.appendRow([
-      recordedAt,
-      leadId,
+      timestamp,
       name,
       phone,
       slot,
       goal,
       plan,
       coach,
-      submittedAt
+      leadId
     ]);
 
     return ContentService.createTextOutput(JSON.stringify({
