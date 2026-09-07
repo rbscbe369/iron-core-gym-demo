@@ -563,7 +563,7 @@
     <p>Come train, meet a coach, see the floor. No pressure, no long-term commitment on day one.</p>
     <div class="trial-cta-group">
       <button class="btn btn-white js-open-trial">Book Free Day Pass →</button>
-      <a class="btn btn-outline-chalk" href="https://wa.me/910000000000?text=Hi!%20I%27d%20like%20to%20book%20a%20free%20trial%20at%20IronCore." target="_blank">Chat on WhatsApp ↗</a>
+      <a class="btn btn-outline-chalk" href="https://wa.me/917810067898?text=Hi!%20I%27d%20like%20to%20book%20a%20free%20trial%20at%20IronCore." target="_blank">Chat on WhatsApp ↗</a>
     </div>
   </div>
 </section>
@@ -877,7 +877,8 @@
     if(e.target === trialModalBg) closeTrialModal();
   });
 
-  // ===== GOOGLE SHEETS WEBHOOK CONFIGURATION =====
+  // ===== GYM CONTACT & WEBHOOK CONFIGURATION =====
+  const GYM_WHATSAPP_NUMBER = '917810067898';
   // Replace PASTE_YOUR_REAL_URL_HERE with your deployed Google Apps Script URL (ending in /exec):
   const GOOGLE_SCRIPT_WEBHOOK_URL = 'PASTE_YOUR_REAL_URL_HERE';
 
@@ -979,7 +980,7 @@
       `🏋️ Coach: ${coach}\n\n` +
       `Looking forward to visiting the floor!`
     );
-    const waUrl = `https://wa.me/910000000000?text=${waText}`;
+    const waUrl = `https://wa.me/${GYM_WHATSAPP_NUMBER}?text=${waText}`;
     document.getElementById('confWhatsAppLink').href = waUrl;
 
     // Switch view to success state

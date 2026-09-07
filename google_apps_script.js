@@ -22,82 +22,20 @@
  */
 
 function doPost(e) {
-  var lock = LockService.getScriptLock();
-  lock.tryLock(10000); // Prevent concurrent write collisions
-
-  try {
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var sheet = ss.getActiveSheet();
-
-    // Auto-create clean styled header row if empty
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow([
-        "Timestamp",
-        "Name",
-        "Phone",
-        "Slot",
-        "Goal",
-        "Plan",
-        "Coach",
-        "LeadID"
-      ]);
-      
-      // Style headers: Charcoal background with Flame Orange text
-      var headerRange = sheet.getRange(1, 1, 1, 8);
-      headerRange.setBackground("#1E1B18");
-      headerRange.setFontColor("#FF5A2B");
-      headerRange.setFontWeight("bold");
-      headerRange.setFontFamily("Arial");
-      sheet.setFrozenRows(1);
-    }
-
-    var data = {};
-    if (e && e.postData && e.postData.contents) {
-      try {
-        data = JSON.parse(e.postData.contents);
-      } catch (parseErr) {
-        data = e.parameter || {};
-      }
-    } else if (e && e.parameter) {
-      data = e.parameter;
-    }
-
-    var timestamp = Utilities.formatDate(new Date(), Session.getScriptTimeZone() || "GMT", "yyyy-MM-dd HH:mm:ss");
-    var name = data.name || "N/A";
-    var phone = data.phone || "N/A";
-    var slot = data.slot || "N/A";
-    var goal = data.goal || "General Fitness";
-    var plan = data.plan || "Not Specified";
-    var coach = data.coach || "Any Available";
-    var leadId = data.id || ("LEAD_" + new Date().getTime());
-
-    // Append new lead row matching: Timestamp | Name | Phone | Slot | Goal | Plan | Coach | LeadID
-    sheet.appendRow([
-      timestamp,
-      name,
-      phone,
-      slot,
-      goal,
-      plan,
-      coach,
-      leadId
-    ]);
-
-    return ContentService.createTextOutput(JSON.stringify({
-      status: "success",
-      message: "Lead recorded successfully in Google Sheet",
-      leadId: leadId
-    })).setMimeType(ContentService.MimeType.JSON);
-
-  } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({
-      status: "error",
-      message: error.toString()
-    })).setMimeType(ContentService.MimeType.JSON);
-
-  } finally {
-    lock.releaseLock();
-  }
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const data = JSON.parse(e.postData.contents);
+  sheet.appendRow([
+    new Date(),
+    data.name,
+    data.phone,
+    data.slot,
+    data.goal,
+    data.plan,
+    data.coach,
+    data.id
+  ]);
+  return ContentService.createTextOutput(JSON.stringify({status: 'ok'}))
+    .setMimeType(ContentService.MimeType.JSON);
 }
 
 function doGet(e) {
