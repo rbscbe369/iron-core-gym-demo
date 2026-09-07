@@ -389,8 +389,85 @@
   .trial-cta-group{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
   .btn-white{background:var(--chalk);color:var(--iron);}
   .btn-white:hover{background:#fff;}
-  .btn-outline-chalk{border:2px solid rgba(243,239,231,0.4);color:var(--chalk);}
-  .btn-outline-chalk:hover{border-color:var(--chalk);background:rgba(243,239,231,0.08);}
+  .btn-whatsapp{
+    background:#25D366;
+    color:#071c10;
+    font-weight:700;
+    border:2px solid #25D366;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    box-shadow:0 6px 20px rgba(37,211,102,0.32);
+    text-decoration:none;
+  }
+  .btn-whatsapp:hover{
+    background:#20ba59;
+    border-color:#20ba59;
+    color:#000;
+    transform:translateY(-2px);
+    box-shadow:0 10px 28px rgba(37,211,102,0.5);
+  }
+  .btn-whatsapp svg{width:20px;height:20px;fill:currentColor;flex-shrink:0;}
+
+  /* Floating WhatsApp Quick-Chat Widget */
+  .floating-wa-btn{
+    position:fixed;
+    bottom:26px;
+    right:26px;
+    z-index:99;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    background:#25D366;
+    color:#fff;
+    box-shadow:0 8px 24px rgba(37,211,102,0.45);
+    text-decoration:none;
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .floating-wa-btn:hover{
+    transform:scale(1.08) translateY(-2px);
+    box-shadow:0 12px 32px rgba(37,211,102,0.65);
+    color:#fff;
+  }
+  .floating-wa-btn svg{width:30px;height:30px;fill:currentColor;}
+  .floating-wa-pulse{
+    position:absolute;
+    top:0;left:0;width:100%;height:100%;
+    border-radius:50%;
+    border:2px solid #25D366;
+    animation:wa-pulse-ring 2.2s cubic-bezier(0.24,0,0.38,1) infinite;
+    pointer-events:none;
+  }
+  @keyframes wa-pulse-ring{
+    0%{transform:scale(0.95);opacity:0.9;}
+    60%{transform:scale(1.45);opacity:0;}
+    100%{transform:scale(1.45);opacity:0;}
+  }
+  .floating-wa-tooltip{
+    position:absolute;
+    right:68px;
+    background:#1E1B18;
+    color:var(--chalk);
+    border:1px solid rgba(243,239,231,0.15);
+    font-family:'Space Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.06em;
+    padding:6px 12px;
+    border-radius:4px;
+    white-space:nowrap;
+    pointer-events:none;
+    opacity:0;
+    transform:translateX(6px);
+    transition:opacity .15s ease, transform .15s ease;
+  }
+  .floating-wa-btn:hover .floating-wa-tooltip{
+    opacity:1;
+    transform:translateX(0);
+  }
 
   footer{
     padding:40px 0;border-top:1px solid var(--line);
@@ -563,7 +640,10 @@
     <p>Come train, meet a coach, see the floor. No pressure, no long-term commitment on day one.</p>
     <div class="trial-cta-group">
       <button class="btn btn-white js-open-trial">Book Free Day Pass →</button>
-      <a class="btn btn-outline-chalk" href="https://wa.me/917810067898?text=Hi!%20I%27d%20like%20to%20book%20a%20free%20trial%20at%20IronCore." target="_blank">Chat on WhatsApp ↗</a>
+      <a class="btn btn-whatsapp" href="https://wa.me/917810067898?text=Hi!%20I%27d%20like%20to%20book%20a%20free%20trial%20at%20IronCore." target="_blank">
+        <svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.19 8.19 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24zm4.52 11.66c-.25-.13-1.47-.72-1.7-.81-.23-.08-.39-.13-.56.13-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.13-1.06-.39-2.03-1.25-.75-.67-1.26-1.5-1.41-1.75-.15-.25-.02-.39.11-.51.11-.11.25-.29.37-.44.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.13-.56-1.35-.77-1.85-.2-.49-.41-.42-.56-.43l-.48-.01c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.13.17 1.77 2.7 4.29 3.79.6.26 1.07.41 1.43.53.6.19 1.15.16 1.58.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.06-.11-.23-.17-.48-.3z"/></svg>
+        <span>Chat on WhatsApp</span>
+      </a>
     </div>
   </div>
 </section>
@@ -711,7 +791,10 @@
       </div>
 
       <div style="display:flex;flex-direction:column;gap:10px;">
-        <a id="confWhatsAppLink" href="#" target="_blank" class="btn btn-flame btn-block">Open WhatsApp Pass ↗</a>
+        <a id="confWhatsAppLink" href="#" target="_blank" class="btn btn-whatsapp btn-block" style="justify-content:center;padding:15px 20px;">
+          <svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.19 8.19 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24zm4.52 11.66c-.25-.13-1.47-.72-1.7-.81-.23-.08-.39-.13-.56.13-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.13-1.06-.39-2.03-1.25-.75-.67-1.26-1.5-1.41-1.75-.15-.25-.02-.39.11-.51.11-.11.25-.29.37-.44.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.13-.56-1.35-.77-1.85-.2-.49-.41-.42-.56-.43l-.48-.01c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.13.17 1.77 2.7 4.29 3.79.6.26 1.07.41 1.43.53.6.19 1.15.16 1.58.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.06-.11-.23-.17-.48-.3z"/></svg>
+          <span>Open WhatsApp Pass ↗</span>
+        </a>
         <button type="button" id="confDoneBtn" class="btn btn-ghost btn-block">Back to Website</button>
       </div>
     </div>
@@ -989,6 +1072,13 @@
     trialForm.reset();
   });
 </script>
+
+<!-- Floating WhatsApp Quick-Chat -->
+<a href="https://wa.me/917810067898?text=Hi!%20I%27d%20like%20to%20know%20more%20about%20IronCore%20Gym." class="floating-wa-btn" target="_blank" aria-label="Chat on WhatsApp" title="Chat on WhatsApp">
+  <div class="floating-wa-pulse"></div>
+  <svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.19 8.19 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24zm4.52 11.66c-.25-.13-1.47-.72-1.7-.81-.23-.08-.39-.13-.56.13-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.13-1.06-.39-2.03-1.25-.75-.67-1.26-1.5-1.41-1.75-.15-.25-.02-.39.11-.51.11-.11.25-.29.37-.44.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.13-.56-1.35-.77-1.85-.2-.49-.41-.42-.56-.43l-.48-.01c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.13.17 1.77 2.7 4.29 3.79.6.26 1.07.41 1.43.53.6.19 1.15.16 1.58.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.06-.11-.23-.17-.48-.3z"/></svg>
+  <span class="floating-wa-tooltip">Chat with us on WhatsApp</span>
+</a>
 
 </body>
 </html>
